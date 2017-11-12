@@ -37,7 +37,7 @@ class Bathroom(Room):
         return self.world['Bedroom']
 
 @world.verb('brush')
-def brush(world):
+def brush(world, *args):
     if not any([isinstance(item, Toothbrush) for item in world.player.inventory]):
         print('You need a toothbrush to brush your teeth')
     elif not isinstance(world.location, Bathroom):

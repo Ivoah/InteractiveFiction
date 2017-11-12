@@ -14,6 +14,9 @@ class World:
         self._items = {}
         self._verbs = {}
         self._player = Player()
+    
+    def __getitem__(self, item):
+        return self._rooms[item]
 
     def room(self, name):
         def decorator(room):
@@ -33,5 +36,14 @@ class World:
             return verb
         return decorator
 
+    def step(self):
+        line = input().split()
+        verb = line[0]
+        if verb in self._verbs:
+            self._verbs[verb](self, *line[1:])
+        else:
+            print('I didn\'t understand what you said.')
+
     def run(self):
-        print('Running... jk')
+        while True:
+            self.step()
