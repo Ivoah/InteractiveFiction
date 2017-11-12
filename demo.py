@@ -26,7 +26,11 @@ class Bathroom(Room):
 class Toothbrush(Item):
     '''An average looking toothbrush, the bristles are visibly worn.'''
 
-    see = lambda self: print('You see a toothbrush lying on the counter.')
+    def see(self):
+        if self.world.location == 'Bathroom':
+            print('You see a toothbrush lying on the counter.')
+        else:
+            print('You see a toothbrush lying on the ground')
 
 @world.verb('brush')
 def brush(world, *args):
@@ -36,5 +40,7 @@ def brush(world, *args):
         print('You look for a sink to brush your teeth but can\'t find any.')
     else:
         print('After two minutes of vigorous brushing, your teeth are sparkly white again.')
+
+world.tests['toothbrush'] = ['n', 'take toothbrush', 's', 'drop toothbrush', 'l']
 
 world.run()

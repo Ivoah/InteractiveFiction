@@ -8,13 +8,14 @@ class World:
         self.running = True
         self.player = Player()
 
+        self.tests = {}
+
     def __getitem__(self, item):
         return self._rooms[item]
 
     def room(self, name, start = False):
         def decorator(room):
-            inst = room(self)
-            inst.name = name
+            inst = room(self, name)
             self._rooms[name] = inst
             if start:
                 self.location = inst
@@ -23,8 +24,7 @@ class World:
 
     def item(self, name):
         def decorator(item):
-            inst = item(self)
-            inst.name = name
+            inst = item(self, name)
             self._items[name] = inst
             return item
         return decorator
@@ -35,8 +35,8 @@ class World:
             return verb
         return decorator
 
-    def step(self):
-        line = input('> ').split()
+    def execute(self, line):
+        line = line.split()
         verb = line[0]
         if verb in self._verbs:
             self._verbs[verb](self, *line[1:])
@@ -46,5 +46,5 @@ class World:
     def run(self):
         self._verbs['look'](self)
         while self.running:
-            self.step()
+            self.execute(input('> '))
         print('Goodbye!')

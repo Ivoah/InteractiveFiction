@@ -15,8 +15,18 @@ def take(world, *args):
     world.player.inventory.append(item)
 
 def drop(world, *args):
-    target = args[0]
+    item = args[0]
+    if item in world.player.inventory:
+        world._items[item].drop()
+        world.player.inventory.remove(item)
+        world.location.items.append(item)
+    else:
+        print(f'You aren\'t carrying a {item}.')
 
+def inventory(world, *args):
+    print('You are carrying:')
+    for item in world.player.inventory:
+        print(f'    {item}')
 
 def north(world, *args):
     go(world, 'north')
@@ -49,6 +59,15 @@ def examine(world, *args):
     if item is None: return
     print(item.__doc__)
 
+def test(world, *args):
+    test = args[0]
+    if test in world.tests:
+        for line in world.tests[test]:
+            print(f'> {line}')
+            world.execute(line)
+    else:
+        print(f'Test "{test}" not found.')
+
 def quit(world, *args):
     yes = input('Are you sure you want to quit? ')
     while yes not in ['yes', 'no']:
@@ -60,6 +79,8 @@ def quit(world, *args):
 verbs = {
     'take': take,
     'drop': drop,
+    'i': inventory,
+    'inventory': inventory,
     'n': north,
     'north': north,
     's': south,
@@ -72,6 +93,7 @@ verbs = {
     'travel': go,
     'l': look,
     'look': look,
+    'test': test,
     'q': quit,
     'quit': quit
 }
