@@ -1,32 +1,31 @@
-class Room:
-    def __init__(self, world):
-        self.world = world
-
-class Item:
-    pass
-
-class Player:
-    pass
+from . import Player, Verbs
 
 class World:
     def __init__(self):
         self._rooms = {}
         self._items = {}
-        self._verbs = {}
-        self._player = Player()
-    
+        self._verbs = Verbs.verbs
+        self.running = True
+        self.player = Player()
+
     def __getitem__(self, item):
         return self._rooms[item]
 
-    def room(self, name):
+    def room(self, name, start = False):
         def decorator(room):
-            self._rooms[name] = room
+            inst = room(self)
+            inst.name = name
+            self._rooms[name] = inst
+            if start:
+                self.location = inst
             return room
         return decorator
 
     def item(self, name):
         def decorator(item):
-            self._items[name] = item
+            inst = item(self)
+            inst.name = name
+            self._items[name] = inst
             return item
         return decorator
 
@@ -37,7 +36,7 @@ class World:
         return decorator
 
     def step(self):
-        line = input().split()
+        line = input('> ').split()
         verb = line[0]
         if verb in self._verbs:
             self._verbs[verb](self, *line[1:])
@@ -45,5 +44,7 @@ class World:
             print('I didn\'t understand what you said.')
 
     def run(self):
-        while True:
+        self._verbs['look'](self)
+        while self.running:
             self.step()
+        print('Goodbye!')
