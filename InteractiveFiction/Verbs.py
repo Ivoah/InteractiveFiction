@@ -42,7 +42,7 @@ def west(world, *args):
 
 def go(world, *args):
     direction = args[0]
-    if hasattr(world.location, direction):
+    if hasattr(world.location, direction) and getattr(world.location, direction):
         world.location = world[getattr(world.location, direction)]
         look(world)
     else:
