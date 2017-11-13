@@ -15,14 +15,6 @@ class LivingRoom(Room):
 
     north = 'Bedroom'
 
-@world.room('Bathroom')
-class Bathroom(Room):
-    '''A small bathroom. There's a tiny shower nestled in the corner next to a toilet and sink.'''
-
-    items = ['toothbrush']
-    south = 'Bedroom'
-
-@world.item('toothbrush')
 class Toothbrush(Item):
     '''An average looking toothbrush, the bristles are visibly worn.'''
 
@@ -32,15 +24,22 @@ class Toothbrush(Item):
         else:
             print('You see a toothbrush lying on the ground')
 
+@world.room('Bathroom')
+class Bathroom(Room):
+    '''A small bathroom. There's a tiny shower nestled in the corner next to a toilet and sink.'''
+
+    items = [Toothbrush(world, 'toothbrush')]
+    south = 'Bedroom'
+
 @world.verb('brush')
 def brush(world, *args):
-    if 'toothbrush' not in world.player.inventory:
+    if not any(isinstance(item, Toothbrush) for item in world.player.inventory):
         print('You need a toothbrush to brush your teeth.')
     elif world.location.name != 'Bathroom':
         print('You look for a sink to brush your teeth but can\'t find any.')
     else:
         print('After two minutes of vigorous brushing, your teeth are sparkly white again.')
 
-world.tests['toothbrush'] = ['n', 'take toothbrush', 's', 'drop toothbrush', 'l']
+world.tests['toothbrush'] = ['n', 'take toothbrush', 's', 'drop toothbrush', 'brush', 'take toothbrush', 'brush', 'n', 'brush']
 
 world.run()

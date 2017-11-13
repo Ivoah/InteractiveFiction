@@ -1,32 +1,35 @@
+from .utils import *
 
 def get(world, target):
     for item in world.location.items:
-        if world._items[item].name == target:
+        if item.name == target:
             return item
 
-    print(f'You cannot find a {target}.')
+    print(f'You cannot find {ana(target)}.')
 
 def take(world, *args):
     target = args[0]
     item = get(world, target)
     if item is None: return
-    world._items[item].take()
+    item.take()
     world.location.items.remove(item)
     world.player.inventory.append(item)
 
 def drop(world, *args):
-    item = args[0]
-    if item in world.player.inventory:
-        world._items[item].drop()
-        world.player.inventory.remove(item)
-        world.location.items.append(item)
+    target = args[0]
+    for item in world.player.inventory:
+        if item.name == target:
+            item.drop()
+            world.player.inventory.remove(item)
+            world.location.items.append(item)
+            return
     else:
-        print(f'You aren\'t carrying a {item}.')
+        print(f'You aren\'t carrying {ana(item)}.')
 
 def inventory(world, *args):
     print('You are carrying:')
     for item in world.player.inventory:
-        print(f'    {item}')
+        print(f'    {item.name}')
 
 def north(world, *args):
     go(world, 'north')
@@ -51,7 +54,7 @@ def go(world, *args):
 def look(world, *args):
     print(world.location.__doc__)
     for item in world.location.items:
-        world._items[item].see()
+        item.see()
 
 def examine(world, *args):
     target = args[0]

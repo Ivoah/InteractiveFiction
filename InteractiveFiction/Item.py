@@ -1,3 +1,5 @@
+from .utils import *
+
 class Item:
     def __init__(self, world, name):
         self.world = world
@@ -5,4 +7,4 @@ class Item:
 
     take = lambda self: print(f'You take the {self.name}.')
     drop = lambda self: print(f'You drop the {self.name}.')
-    see = lambda self: print(f'You see a {self.name}.')
+    see = lambda self: print(f'You see a {ana(self.name)}.')
