@@ -1,7 +1,7 @@
 from .utils import *
 
 def get(world, target):
-    for item in world.location.items:
+    for item in world.location.items + world.player.inventory:
         if item.name == target:
             return item
 
@@ -11,25 +11,29 @@ def take(world, *args):
     target = args[0]
     item = get(world, target)
     if item is None: return
-    item.take()
+    if item in world.player.inventory:
+        print(f'You are already carrying {ana(item.name)}')
+        return
+    if item.take() is False: return
     world.location.items.remove(item)
     world.player.inventory.append(item)
 
 def drop(world, *args):
     target = args[0]
-    for item in world.player.inventory:
-        if item.name == target:
-            item.drop()
-            world.player.inventory.remove(item)
-            world.location.items.append(item)
-            return
-    else:
-        print(f'You aren\'t carrying {ana(item)}.')
+    item = get(world, target)
+    if item is None: return
+    if item not in world.player.inventory:
+        print('You can\'t drop what you aren\'t carrying!')
+        return
+    if item.drop() is False: return
+    world.player.inventory.remove(item)
+    world.location.items.append(item)
 
 def inventory(world, *args):
     print('You are carrying:')
     for item in world.player.inventory:
-        print(f'    {item.name}')
+        if item.shown:
+            print(f'    {item.name}')
 
 def north(world, *args):
     go(world, 'north')
@@ -96,6 +100,9 @@ verbs = {
     'travel': go,
     'l': look,
     'look': look,
+    'x': examine,
+    'examine': examine,
+    'inspect': examine,
     'test': test,
     'q': quit,
     'quit': quit

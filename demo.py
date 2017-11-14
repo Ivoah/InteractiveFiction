@@ -24,6 +24,16 @@ class Toothbrush(Item):
         else:
             print('You see a toothbrush lying on the ground')
 
+class Teeth(Item):
+    '''The only set of teeth you'll get, take care of them'''
+
+    shown = False
+    def drop(self):
+        print('You try to pull your teeth out of your skull, but they\'re firmly rooted')
+        return False
+
+world.player.inventory.append(Teeth(world, 'teeth'))
+
 @world.room('Bathroom')
 class Bathroom(Room):
     '''A small bathroom. There's a tiny shower nestled in the corner next to a toilet and sink.'''
