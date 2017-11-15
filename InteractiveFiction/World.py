@@ -9,6 +9,9 @@ class World:
         self.running = True
         self.player = Player()
 
+        self.print = print
+        self.input = input
+
         self.tests = {}
 
     def __getitem__(self, item):
@@ -22,7 +25,7 @@ class World:
                 self.location = inst
             return room
         return decorator
-        
+
     def verb(self, name):
         def decorator(verb):
             self._verbs[name] = verb
@@ -35,10 +38,10 @@ class World:
         if verb in self._verbs:
             self._verbs[verb](self, *line[1:])
         else:
-            print('I didn\'t understand what you said.')
+            self.print('I didn\'t understand what you said.')
 
     def run(self):
         self._verbs['look'](self)
         while self.running:
-            self.execute(input('> '))
-        print('Goodbye!')
+            self.execute(self.input('> '))
+        self.print('Goodbye!')

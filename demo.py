@@ -20,16 +20,16 @@ class Toothbrush(Item):
 
     def see(self):
         if self.world.location == 'Bathroom':
-            print('You see a toothbrush lying on the counter.')
+            world.print('You see a toothbrush lying on the counter.')
         else:
-            print('You see a toothbrush lying on the ground')
+            world.print('You see a toothbrush lying on the ground')
 
 class Teeth(Item):
     '''The only set of teeth you'll get, take care of them'''
 
     shown = False
     def drop(self):
-        print('You try to pull your teeth out of your skull, but they\'re firmly rooted')
+        world.print('You try to pull your teeth out of your skull, but they\'re firmly rooted')
         return False
 
 world.player.inventory.append(Teeth(world, 'teeth'))
@@ -44,11 +44,11 @@ class Bathroom(Room):
 @world.verb('brush')
 def brush(world, *args):
     if not any(isinstance(item, Toothbrush) for item in world.player.inventory):
-        print('You need a toothbrush to brush your teeth.')
+        world.print('You need a toothbrush to brush your teeth.')
     elif world.location.name != 'Bathroom':
-        print('You look for a sink to brush your teeth but can\'t find any.')
+        world.print('You look for a sink to brush your teeth but can\'t find any.')
     else:
-        print('After two minutes of vigorous brushing, your teeth are sparkly white again.')
+        world.print('After two minutes of vigorous brushing, your teeth are sparkly white again.')
 
 world.tests['toothbrush'] = ['n', 'take toothbrush', 's', 'drop toothbrush', 'brush', 'take toothbrush', 'brush', 'n', 'brush']
 

@@ -5,13 +5,13 @@ def get(world, target):
         if item.name == target:
             return item
 
-    print(f'You cannot find {ana(target)}.')
+    world.world.print(f'You cannot find {ana(target)}.')
 
 def take(world, target):
     item = get(world, target)
     if item is None: return
     if item in world.player.inventory:
-        print(f'You are already carrying {ana(item.name)}')
+        world.print(f'You are already carrying {ana(item.name)}')
         return
     if item.take() is False: return
     world.location.items.remove(item)
@@ -21,17 +21,17 @@ def drop(world, target):
     item = get(world, target)
     if item is None: return
     if item not in world.player.inventory:
-        print('You can\'t drop what you aren\'t carrying!')
+        world.print('You can\'t drop what you aren\'t carrying!')
         return
     if item.drop() is False: return
     world.player.inventory.remove(item)
     world.location.items.append(item)
 
 def inventory(world):
-    print('You are carrying:')
+    world.print('You are carrying:')
     for item in world.player.inventory:
         if item.shown:
-            print(f'    {item.name}')
+            world.print(f'    {item.name}')
 
 def north(world):
     go(world, 'north')
@@ -50,30 +50,30 @@ def go(world, direction):
         world.location = world[getattr(world.location, direction)]
         look(world)
     else:
-        print('You cannot go that way.')
+        world.print('You cannot go that way.')
 
 def look(world):
-    print(world.location.__doc__)
+    world.print(world.location.__doc__)
     for item in world.location.items:
         item.see()
 
 def examine(world, target):
     item = get(world, target)
     if item is None: return
-    print(item.__doc__)
+    world.print(item.__doc__)
 
 def test(world, test):
     if test in world.tests:
         for line in world.tests[test]:
-            print(f'> {line}')
+            world.print(f'> {line}')
             world.execute(line)
     else:
-        print(f'Test "{test}" not found.')
+        world.print(f'Test "{test}" not found.')
 
 def quit(world, yes = ''):
     while yes not in ['yes', 'no']:
-        print('Please answer "yes" or "no".')
-        yes = input('Are you sure you want to quit? ')
+        world.print('Please answer "yes" or "no".')
+        yes = world.input('Are you sure you want to quit? ')
     if yes == 'yes':
         world.running = False
 
