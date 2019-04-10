@@ -5,7 +5,7 @@ def get(world, target):
         if item.name == target:
             return item
 
-    world.world.print(f'You cannot find {ana(target)}.')
+    world.print(f'You cannot find {ana(target)}.')
 
 def take(world, target):
     item = get(world, target)
