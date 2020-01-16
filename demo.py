@@ -19,7 +19,7 @@ class Toothbrush(Item):
     '''An average looking toothbrush, the bristles are visibly worn.'''
 
     def see(self):
-        if self.world.location == 'Bathroom':
+        if self.world.location.name == 'Bathroom':
             world.print('You see a toothbrush lying on the counter.')
         else:
             world.print('You see a toothbrush lying on the ground')
